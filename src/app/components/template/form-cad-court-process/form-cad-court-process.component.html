@@ -58,7 +58,7 @@
             <button type="button" extended mat-fab onclick="document.getElementById('getFile').click()">
                 <mat-icon>attachment</mat-icon>Upload de documento PDF*
             </button>
-            <input formControlName="file" (change)="onFileSelected($event)" type='file' id="getFile" style="display:none" accept=".pdf">
+            <input (change)="onFileSelected($event)" type='file' id="getFile" style="display:none" accept=".pdf">
         </div>
         @if(fileSelected) {
             <span class="file-details-container">

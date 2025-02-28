@@ -84,22 +84,27 @@ export class FormCadCourtProcessComponent implements OnInit {
   }
 
   loadDataForm(id: number) : void {
-    this.courtProcessService.getCourtProcessById(id).subscribe(async (data) =>{
-      this.courtProcessDataToUpdate = data;
+    this.courtProcessService.getCourtProcessById(id).subscribe({
+      next: async (data) => {
+        this.courtProcessDataToUpdate = data;
 
-      this.base64String = data.pdfFileBase64;
+        this.base64String = data.pdfFileBase64;
 
-      this.cities = await this.loadCitiesByUf(data.uf);
+        this.cities = await this.loadCitiesByUf(data.uf);
 
-      this.form.patchValue({
-        npu: data.npu,
-        city: data.city,
-        creationDate: this.addAdjustmentDate(data.creationDate),
-        visualizationDate: this.addAdjustmentDate(data.visualizationDate!),
-        uf: data.uf,
-        file: data.pdfFileBase64
-      });
-
+        this.form.patchValue({
+          npu: data.npu,
+          city: data.city,
+          creationDate: this.addAdjustmentDate(data.creationDate),
+          visualizationDate: this.addAdjustmentDate(data.visualizationDate!),
+          uf: data.uf,
+          file: data.pdfFileBase64
+        });
+      },
+      error: (error) => {
+        console.error('Error:', error);
+        this.openErrorDialog("Aconteceu um erro inesperado no servidor!");
+      }
     });
   }
 
@@ -127,6 +132,7 @@ export class FormCadCourtProcessComponent implements OnInit {
 
   onFileSelected(event: any): void {
     this.fileSelected = event.target.files[0];
+    this.form.get('file')?.patchValue(this.fileSelected);
   }
 
   async loadCitiesByUf(ufSelected: string) {
@@ -162,23 +168,42 @@ export class FormCadCourtProcessComponent implements OnInit {
         formData.append("pdfFile", this.fileSelected!);
       }
       
-      this.courtProcessService.createOrUpdateCourtProcess(formData).subscribe(()=>{
-        this.openConfirmDialog()
-      });      
+      this.courtProcessService.createOrUpdateCourtProcess(formData).subscribe({
+        next: () => {
+          if (this.courtProcessDataToUpdate) {
+            this.openSuccessDialog("Processo atualizado com sucesso!");
+          }else {
+            this.openSuccessDialog("Processo inserido com sucesso!");
+          }
+        },
+        error: (error) => {
+          console.error('Error:', error);
+          this.openErrorDialog("Não foi possível realizar essa operação!");
+        }
+      }); 
     }
   }
 
-  openConfirmDialog(): void {
+  openSuccessDialog(message: String): void {
       const dialogRef = this.dialog.open(CustomAlertComponent, {
         data: {
           title: "Atenção!",
-          message: "Processo inserido com sucesso!" 
+          message 
         }
       });
   
       dialogRef.afterClosed().subscribe(() => {
         this.router.navigate(['/listCourtProcess']);  
       });
+  }
+
+  openErrorDialog(message: String): void {
+    this.dialog.open(CustomAlertComponent, {
+      data: {
+        title: "Error!",
+        message 
+      }
+    });
   }
 
   cancelEvent(): void {
