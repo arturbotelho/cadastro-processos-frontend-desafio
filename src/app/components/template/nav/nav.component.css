@@ -1,0 +1,23 @@
+.sidenav {
+    background-color: #edebeb;
+    width: 180px;
+    border-radius: unset;
+}
+
+.item-menu {
+    display: flex;
+    padding-left: 10px;
+}
+
+.item-menu span {
+    padding-left: 10px;
+    font-weight: bold;
+}
+
+.content{
+    padding: 16px;
+    background-color: white;
+
+    overflow-y: auto;
+    max-height: calc(100vh - 100px);;
+}

@@ -1,0 +1,86 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="form">
+    <mat-form-field>
+        <mat-label>NPU</mat-label>
+        <input formControlName="npu" maxlength="25" appMaskNpuInput type="text" matInput placeholder="Ex.: 1111111-11.1111.1.11.1111" name="npu">
+        @if(form.get('npu')?.hasError('required')) {
+           <mat-error>NPU é obrigatório</mat-error>
+        }
+        @if(form.get('npu')?.hasError('minlength')) {
+            <mat-error>NPU deve ter no minimo 17 digitos</mat-error>
+        }
+    </mat-form-field>
+    <mat-form-field class="padding-top-field">
+        <mat-label>Data de Cadastro</mat-label>
+        <input maxlength="10" matInput formControlName="creationDate" [matDatepicker]="pickerCreationDate" name="creationDate">
+        <mat-hint>
+            DD/MM/YYYY
+        </mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="pickerCreationDate"></mat-datepicker-toggle>
+        <mat-datepicker #pickerCreationDate></mat-datepicker>
+        @if(form.get('creationDate')?.hasError('required')) {
+            <mat-error>Data de Cadastro é obrigatório</mat-error>
+        }
+    </mat-form-field>
+    <mat-form-field class="padding-top-field">
+        <mat-label>Data de Visualização</mat-label>
+        <input matInput formControlName="visualizationDate" [matDatepicker]="pickerVisualizationDate" name="visualizationDate">
+        <mat-hint>DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="pickerVisualizationDate"></mat-datepicker-toggle>
+        <mat-datepicker #pickerVisualizationDate></mat-datepicker>
+        @if(form.get('visualizationDate')?.hasError('required')) {
+            <mat-error>Data de Visualização é obrigatório</mat-error>
+        }
+    </mat-form-field>
+    <mat-form-field class="padding-top-field">
+        <mat-label>UF</mat-label>
+        <mat-select formControlName="uf" name="uf" (selectionChange)="loadCitiesByUfOnSelectEvent($event.value)">
+            @for (uf of ufs; track uf) {
+              <mat-option [value]="uf.sigla">{{uf.sigla}}</mat-option>
+            }
+        </mat-select>
+        @if(form.get('uf')?.hasError('required')) {
+            <mat-error>Uf é obrigatório</mat-error>
+        }
+    </mat-form-field>
+    <mat-form-field class="padding-top-field">
+        <mat-label>Município</mat-label>
+        <mat-select formControlName="city" name="city">
+            @for (city of cities; track city) {
+                <mat-option [value]="city.nome">{{city.nome}}</mat-option>
+            }
+        </mat-select>
+        @if(form.get('city')?.hasError('required')) {
+            <mat-error>Município é obrigatório</mat-error>
+        }
+    </mat-form-field>
+    <div class="file-container padding-top-field">
+        <div>
+            <button type="button" extended mat-fab onclick="document.getElementById('getFile').click()">
+                <mat-icon>attachment</mat-icon>Upload de documento PDF*
+            </button>
+            <input formControlName="file" (change)="onFileSelected($event)" type='file' id="getFile" style="display:none" accept=".pdf">
+        </div>
+        @if(fileSelected) {
+            <span class="file-details-container">
+                {{fileSelected.name}}
+            </span>
+        }
+        @if(!fileSelected && base64String) {
+            <span class="file-details-container">
+                <a href="#" (click)="downloadFile($event)">Clique aqui para baixar o arquivo!</a>
+            </span>
+        }
+    </div>
+
+    <div class="container-button-form">
+        <button type="button" (click)="cancelEvent()" mat-raised-button>Cancelar</button>
+
+        @if(!courtProcessDataToUpdate) {
+            <button type="submit" mat-flat-button [disabled]="form.invalid">Salvar</button>
+        }
+
+        @if(courtProcessDataToUpdate) {
+            <button type="submit" mat-flat-button [disabled]="form.invalid">Atualizar</button>
+        }
+    </div>
+</form>

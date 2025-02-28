@@ -1,0 +1,52 @@
+<div class="mat-elevation-z2">
+  <table mat-table class="full-width-table" [dataSource]="dataSource" matSort aria-label="Elements">
+    <!-- Id Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>Id</th>
+      <td mat-cell *matCellDef="let row">{{row.id}}</td>
+    </ng-container>
+
+    <!-- Npu Column -->
+    <ng-container matColumnDef="npu">
+      <th mat-header-cell *matHeaderCellDef>Npu</th>
+      <td mat-cell *matCellDef="let row">{{row.npu}}</td>
+    </ng-container>
+
+    <!-- Creation Date Column -->
+    <ng-container matColumnDef="creationDate">
+      <th mat-header-cell *matHeaderCellDef>Data de Cadastro</th>
+      <td mat-cell *matCellDef="let row">{{row.creationDate | dateFormat:'dd/MM/yyyy'}}</td>
+    </ng-container>
+
+    <!-- Uf Column -->
+    <ng-container matColumnDef="uf">
+      <th mat-header-cell *matHeaderCellDef>Uf</th>
+      <td mat-cell *matCellDef="let row">{{row.uf}}</td>
+    </ng-container>
+
+    <!-- Actions Column -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Ações</th>
+      <td mat-cell *matCellDef="let row">
+        <div>
+          <button (click)="editEvent(row.id)" mat-fab class="action-btn" >
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <button (click)="removeEvent(row.id)" mat-fab class="action-btn">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [length]="totalElements"
+    [pageSize]="10"
+    [pageSizeOptions]="[5, 10, 20]"
+    (page)="onPageChange($event)"
+    aria-label="Select page">
+  </mat-paginator>
+</div>

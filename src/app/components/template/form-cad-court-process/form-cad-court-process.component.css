@@ -1,0 +1,33 @@
+.form{
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.container-button-form{
+    display: flex;
+    justify-content: center;
+}
+
+.container-button-form button {
+    margin: 10px;
+}
+
+.file-container{
+    display: flex;
+    align-items: center;
+}
+
+.file-details-container {
+    display: flex;
+    height: 64px;
+    width: 266px;
+    justify-content: center;
+    align-items: center;
+    margin-left: 6px;
+    background: azure;
+}
+
+.padding-top-field {
+    padding-top: 8px;
+}
