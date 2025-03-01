@@ -14,6 +14,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { DateFormatPipe } from '../../../pipes/date-format.pipe';
 
+import { CustomAlertComponent } from '../custom-alert/custom-alert.component';
+
 export class PaginationProps {
   constructor(public pageIndex: number, public pageSize: number) {}
 }
@@ -58,12 +60,18 @@ export class CourtProcessTableComponent implements AfterViewInit {
   }
 
   loadData(updateTotalElements: boolean = true) : void {
-    this.courtProcessService.getAllCourtProcess(this.currentPagination.pageIndex, this.currentPagination.pageSize).subscribe((data) => {
-      this.dataSource.data = data.content;
-
-      if (updateTotalElements) {
-        this.totalElements = data.totalElements;
-        this.paginator.length = this.totalElements;
+    this.courtProcessService.getAllCourtProcess(this.currentPagination.pageIndex, this.currentPagination.pageSize).subscribe({
+      next: (data) =>{
+        this.dataSource.data = data.content;
+    
+        if (updateTotalElements) {
+          this.totalElements = data.totalElements;
+          this.paginator.length = this.totalElements;
+        }
+      }, 
+      error: (error) => {
+        console.error('Error:', error);
+        this.openErrorDialog("Aconteceu um erro inesperado no servidor!");
       }
     });
   }
@@ -76,12 +84,27 @@ export class CourtProcessTableComponent implements AfterViewInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.courtProcessService.deleteCourtProcess(id).subscribe(()=>{
-          this.openSnackBar("Item removido com sucesso!!!");
-          this.loadData(false);
-        });
+    dialogRef.afterClosed().subscribe({
+      next: (result) => {
+        if (result) {
+          this.courtProcessService.deleteCourtProcess(id).subscribe(()=>{
+            this.openSnackBar("Item removido com sucesso!!!");
+            this.loadData(false);
+          });
+        }
+      },
+      error: (error) => {
+        console.error('Error:', error);
+        this.openErrorDialog("Não foi possível realizar essa operação!");
+      }
+    });
+  }
+
+  openErrorDialog(message: String): void {
+    this.dialog.open(CustomAlertComponent, {
+      data: {
+        title: "Error!",
+        message 
       }
     });
   }

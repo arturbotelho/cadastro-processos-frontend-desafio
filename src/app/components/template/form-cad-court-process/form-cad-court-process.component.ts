@@ -28,7 +28,6 @@ import {CourtProcess} from '../../../model/court-process.model';
 
 import { MatDialog } from '@angular/material/dialog';
 import { CustomAlertComponent } from '../custom-alert/custom-alert.component';
-import { firstValueFrom } from 'rxjs';
 
 registerLocaleData(localePt);
 
@@ -63,8 +62,8 @@ export class FormCadCourtProcessComponent implements OnInit {
     file: new FormControl('', [Validators.required])
   });
 
-  async ngOnInit() {
-    this.ufs = await this.loadUfs();
+  ngOnInit() {
+    this.loadUfs();
 
     this.route.queryParams.subscribe(params => {
       const {id} = params;
@@ -85,16 +84,15 @@ export class FormCadCourtProcessComponent implements OnInit {
 
   loadDataForm(id: number) : void {
     this.courtProcessService.getCourtProcessById(id).subscribe({
-      next: async (data) => {
+      next: (data) => {
         this.courtProcessDataToUpdate = data;
 
         this.base64String = data.pdfFileBase64;
 
-        this.cities = await this.loadCitiesByUf(data.uf);
+        this.loadCitiesByUf(data.uf);
 
         this.form.patchValue({
           npu: data.npu,
-          city: data.city,
           creationDate: this.addAdjustmentDate(data.creationDate),
           visualizationDate: this.addAdjustmentDate(data.visualizationDate!),
           uf: data.uf,
@@ -102,8 +100,7 @@ export class FormCadCourtProcessComponent implements OnInit {
         });
       },
       error: (error) => {
-        console.error('Error:', error);
-        this.openErrorDialog("Aconteceu um erro inesperado no servidor!");
+        this.showError(error);
       }
     });
   }
@@ -126,8 +123,20 @@ export class FormCadCourtProcessComponent implements OnInit {
     downloadLink.click();
   }
   
-  async loadUfs() {
-    return await firstValueFrom(this.ibgeService.getUfs())
+  loadUfs(): void {
+    this.ibgeService.getUfs().subscribe({
+      next: (data) => {
+        this.ufs = data;
+      }, 
+      error: (error) => {
+       this.showError(error);
+      }
+    });
+  }
+
+  showError(error: any, message: string = "Aconteceu um erro inesperado no servidor!"): void {
+    console.error('Error:', error);
+    this.openErrorDialog(message);
   }
 
   onFileSelected(event: any): void {
@@ -135,8 +144,18 @@ export class FormCadCourtProcessComponent implements OnInit {
     this.form.get('file')?.patchValue(this.fileSelected);
   }
 
-  async loadCitiesByUf(ufSelected: string) {
-    return await firstValueFrom(this.ibgeService.getCitiesByUf(ufSelected));
+  loadCitiesByUf(ufSelected: string): void {
+    this.ibgeService.getCitiesByUf(ufSelected).subscribe({
+      next: (data) => {
+        this.cities = data;
+        this.form.patchValue({
+          city: this.courtProcessDataToUpdate?.city
+        });
+      }, 
+      error: (error) => {
+        this.showError(error);
+      }
+    });
   }
 
   loadCitiesByUfOnSelectEvent(ufSelected: string) {
