@@ -25,6 +25,10 @@ export class CourtProcessService {
     return this.http.get<CourtProcess>(`${Util.getBaseUrl() + '/process'}/${id}`);
   }
 
+  updateVisualizationDateById(id: number): Observable<CourtProcess> {
+    return this.http.put<CourtProcess>(`${Util.getBaseUrl() + '/process'}/${id}`, {});
+  }
+
   createOrUpdateCourtProcess(formData: FormData): Observable<CourtProcess> {
     return this.http.post<CourtProcess>(`${Util.getBaseUrl() + '/process/'}`, formData);
   }

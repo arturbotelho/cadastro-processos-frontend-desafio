@@ -5,3 +5,17 @@
 .action-btn {
   margin-right: 10px;
 }
+
+.chip-container span{
+  color: green;
+}
+
+.chip-container{
+  display: flex;
+  align-items: center;
+}
+
+.chip-icon {
+  color: green;
+  font-size: 21px;
+}

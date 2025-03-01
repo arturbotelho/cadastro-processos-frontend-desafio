@@ -57,7 +57,7 @@ export class FormCadCourtProcessComponent implements OnInit {
     npu: new FormControl('', [Validators.required, Validators.minLength(16)]),
     city: new FormControl('', [Validators.required]),
     creationDate: new FormControl('', [Validators.required]),
-    visualizationDate: new FormControl('', [Validators.required]),
+    visualizationDate: new FormControl('', []),
     uf: new FormControl('', [Validators.required]),
     file: new FormControl('', [Validators.required])
   });
@@ -79,11 +79,12 @@ export class FormCadCourtProcessComponent implements OnInit {
               file:  '',
             });
       }
+      this.form.get('visualizationDate')?.disable();
     });
   }
 
   loadDataForm(id: number) : void {
-    this.courtProcessService.getCourtProcessById(id).subscribe({
+    this.courtProcessService.updateVisualizationDateById(id).subscribe({
       next: (data) => {
         this.courtProcessDataToUpdate = data;
 
@@ -180,7 +181,11 @@ export class FormCadCourtProcessComponent implements OnInit {
       formData.append("npu", npu);
       formData.append("city", city);
       formData.append("creationDate", formatDate(creationDate,'yyyy-MM-dd','en-US'));
-      formData.append("visualizationDate", formatDate(visualizationDate,'yyyy-MM-dd','en-US'));
+
+      if (this.courtProcessDataToUpdate && this.courtProcessDataToUpdate.visualizationDate) {
+        formData.append("visualizationDate", formatDate(this.courtProcessDataToUpdate.visualizationDate,'yyyy-MM-dd','en-US'));
+      }
+      
       formData.append("uf", uf);
 
       if (this.fileSelected) {

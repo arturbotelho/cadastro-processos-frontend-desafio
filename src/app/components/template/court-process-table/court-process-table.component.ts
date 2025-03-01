@@ -16,6 +16,8 @@ import { DateFormatPipe } from '../../../pipes/date-format.pipe';
 
 import { CustomAlertComponent } from '../custom-alert/custom-alert.component';
 
+import {MatChipsModule} from '@angular/material/chips';
+
 export class PaginationProps {
   constructor(public pageIndex: number, public pageSize: number) {}
 }
@@ -25,7 +27,7 @@ export class PaginationProps {
   templateUrl: './court-process-table.component.html',
   styleUrl: './court-process-table.component.css',
   standalone: true,
-  imports: [DateFormatPipe, MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule],
+  imports: [DateFormatPipe, MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatChipsModule],
   providers: [
     { provide: MatPaginatorIntl, useValue: loadI18nPaginatorIntl() }
   ]

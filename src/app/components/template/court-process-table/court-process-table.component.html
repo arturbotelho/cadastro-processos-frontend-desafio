@@ -28,14 +28,20 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Ações</th>
       <td mat-cell *matCellDef="let row">
-        <div>
           <button (click)="editEvent(row.id)" mat-fab class="action-btn" >
-            <mat-icon>visibility</mat-icon>
+            <mat-icon>edit</mat-icon>
           </button>
           <button (click)="removeEvent(row.id)" mat-fab class="action-btn">
             <mat-icon>delete</mat-icon>
           </button>
-        </div>
+          @if(row.visualizationDate) {
+            <mat-chip>
+              <div class="chip-container">
+                <mat-icon class="chip-icon">check</mat-icon>
+                <span>Visualizado</span>
+              </div>
+            </mat-chip>
+          }
       </td>
     </ng-container>
 

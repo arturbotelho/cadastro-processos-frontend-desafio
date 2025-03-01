@@ -21,16 +21,15 @@
             <mat-error>Data de Cadastro é obrigatório</mat-error>
         }
     </mat-form-field>
-    <mat-form-field class="padding-top-field">
-        <mat-label>Data de Visualização</mat-label>
-        <input matInput formControlName="visualizationDate" [matDatepicker]="pickerVisualizationDate" name="visualizationDate">
-        <mat-hint>DD/MM/YYYY</mat-hint>
-        <mat-datepicker-toggle matIconSuffix [for]="pickerVisualizationDate"></mat-datepicker-toggle>
-        <mat-datepicker #pickerVisualizationDate></mat-datepicker>
-        @if(form.get('visualizationDate')?.hasError('required')) {
-            <mat-error>Data de Visualização é obrigatório</mat-error>
-        }
-    </mat-form-field>
+    @if(courtProcessDataToUpdate) {
+        <mat-form-field class="padding-top-field">
+            <mat-label>Data de Visualização</mat-label>
+            <input matInput formControlName="visualizationDate" [matDatepicker]="pickerVisualizationDate" name="visualizationDate">
+            <mat-hint>DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="pickerVisualizationDate"></mat-datepicker-toggle>
+            <mat-datepicker #pickerVisualizationDate></mat-datepicker>
+        </mat-form-field>
+    }
     <mat-form-field class="padding-top-field">
         <mat-label>UF</mat-label>
         <mat-select formControlName="uf" name="uf" (selectionChange)="loadCitiesByUfOnSelectEvent($event.value)">
