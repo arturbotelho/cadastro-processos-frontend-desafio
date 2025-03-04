@@ -1,3 +1,4 @@
+import { MaskDateInputDirective } from './../../../directive/mask-date-input.directive';
 import { CourtProcessService } from './../../../services/court-process.service';
 import { MaskNpuInputDirective } from './../../../directive/mask-npu-input.directive';
 import { IbgeService } from './../../../services/ibge.service';
@@ -13,7 +14,7 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 
-import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatDatepickerInputEvent, MatDatepickerModule} from '@angular/material/datepicker';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import {MatSelectModule} from '@angular/material/select';
 import {MatButtonModule} from '@angular/material/button';
@@ -33,7 +34,7 @@ registerLocaleData(localePt);
 
 @Component({
   selector: 'app-form-cad-court-process',
-  imports: [MaskNpuInputDirective, FormsModule, MatIconModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatSelectModule, MatButtonModule, ReactiveFormsModule],
+  imports: [MaskDateInputDirective, MaskNpuInputDirective, FormsModule, MatIconModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatSelectModule, MatButtonModule, ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [provideNativeDateAdapter(), { provide: MAT_DATE_LOCALE, useValue: 'pt' }],
   templateUrl: './form-cad-court-process.component.html',
@@ -104,6 +105,14 @@ export class FormCadCourtProcessComponent implements OnInit {
         this.showError(error);
       }
     });
+  }
+
+  addEvent(event: MatDatepickerInputEvent<Date>) {
+    if (event.value) {
+      this.form.patchValue({
+        creationDate: event.value
+      })
+    }
   }
 
   addAdjustmentDate(dateStr: string): Date {

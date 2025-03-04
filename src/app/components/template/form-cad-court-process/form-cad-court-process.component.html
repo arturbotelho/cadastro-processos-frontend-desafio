@@ -11,7 +11,7 @@
     </mat-form-field>
     <mat-form-field class="padding-top-field">
         <mat-label>Data de Cadastro</mat-label>
-        <input maxlength="10" matInput formControlName="creationDate" [matDatepicker]="pickerCreationDate" name="creationDate">
+        <input maxlength="10" (dateChange)="addEvent($event)" appMaskDateInput matInput formControlName="creationDate" [matDatepicker]="pickerCreationDate" name="creationDate">
         <mat-hint>
             DD/MM/YYYY
         </mat-hint>
