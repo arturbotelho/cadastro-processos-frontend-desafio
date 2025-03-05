@@ -10,12 +10,7 @@ import {MatInputModule} from '@angular/material/input';
 
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 
-// Import the locale data for French
-import { registerLocaleData } from '@angular/common';
-import localePt from '@angular/common/locales/pt';
-
 import {MatDatepickerInputEvent, MatDatepickerModule} from '@angular/material/datepicker';
-import {provideNativeDateAdapter} from '@angular/material/core';
 import {MatSelectModule} from '@angular/material/select';
 import {MatButtonModule} from '@angular/material/button';
 import {City} from '../../../model/city.model';
@@ -30,13 +25,33 @@ import {CourtProcess} from '../../../model/court-process.model';
 import { MatDialog } from '@angular/material/dialog';
 import { CustomAlertComponent } from '../custom-alert/custom-alert.component';
 
-registerLocaleData(localePt);
+import { MAT_DATE_FORMATS } from '@angular/material/core';
+
+import {provideMomentDateAdapter} from '@angular/material-moment-adapter';
+
+import 'moment/locale/pt';
+
+const MY_DATE_FORMAT = {
+  parse: {
+    dateInput: 'DD/MM/YYYY', // this is how your date will be parsed from Input
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY', // this is how your date will get displayed on the Input
+    monthYearLabel: 'MMMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY'
+  }
+};
 
 @Component({
   selector: 'app-form-cad-court-process',
   imports: [MaskDateInputDirective, MaskNpuInputDirective, FormsModule, MatIconModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatSelectModule, MatButtonModule, ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [provideNativeDateAdapter(), { provide: MAT_DATE_LOCALE, useValue: 'pt' }],
+  providers: [
+        { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },    
+        provideMomentDateAdapter(),
+        { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMAT },
+  ],
   templateUrl: './form-cad-court-process.component.html',
   styleUrl: './form-cad-court-process.component.css',
   standalone: true,
