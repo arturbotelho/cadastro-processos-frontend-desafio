@@ -8,3 +8,4 @@ Execute os comandos abaixo para iniciar o servidor de desenvolvimento. Navegue a
 ```bash
 npm install
 ng serve
+```
