@@ -127,6 +127,8 @@ export class FormCadCourtProcessComponent implements OnInit {
       this.form.patchValue({
         creationDate: event.value
       })
+    } else {
+      this.showError(null, "Data inválida!!");
     }
   }
 
