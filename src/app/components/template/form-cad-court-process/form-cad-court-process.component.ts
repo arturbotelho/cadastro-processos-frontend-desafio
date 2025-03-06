@@ -257,6 +257,6 @@ export class FormCadCourtProcessComponent implements OnInit {
   }
 
   cancelEvent(): void {
-    this.router.navigate(['/']);
+    this.router.navigate(['/listCourtProcess']);
   }
 }
